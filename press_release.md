@@ -14,6 +14,6 @@ In this project, I built an end-to-end ML system that was trained on a diverse s
 
 ## Chart
 
-![Top Features Predicting AI vs Human Text](./feature_importance.png)
+![Top Features Predicting AI vs Human Text](code/feature_importance.png)
 
 The chart above shows the words and phrases that most strongly push the classifier toward predicting AI or human authorship. The red bars on the right are words and bigrams that the model associates with AI generated text, things like "ingredients", "instructions", "overall", and "is based", which reflect the formulaic and structured language that AI models tend to produce across recipe, abstract, and news domains. The blue bars on the left are words the model associates with human writing, dominated by basic function words like "is", "and", "of", and "the", as well as some HTML artifacts like "br" that came from Reddit and review text in the human corpus. The key takeaway here is that AI writing tends to be more content-heavy and structured, while human writing relies more on basic connective language and informal patterns that AI models tend to underuse.
