@@ -2,7 +2,7 @@
 
 **Name:** Ethan Cao  
 **NetID:** wkt7ne  
-**DOI:** [YOUR_DOI — add after uploading to Zenodo]  
+**DOI:** 
 **License:** MIT — [LICENSE](./LICENSE)  
 **Press Release:** [press_release.md](./press_release.md)  
 **Pipeline:** [pipeline.ipynb](./pipeline.ipynb) | [pipeline.md](./pipeline.md)
