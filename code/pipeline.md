@@ -580,3 +580,101 @@ for i, text in enumerate(test_inputs):
 - based on the current test results, both from RAID's own test sets and my own custom inputs, I believe that I have indeed found a way to truly allow models (even models as simple as logistic regression) to interpret and distinguish between human and AI generated text. 
 - Although due to the class imbalance problem in the dataset, I have to manually add weights to the human class to ensure that the model does not overfit, I think a better way forward is likely to find a better and more balanced dataset so that the model learns sufficient data from both human and AI generated texts. 
 - All in all, I would only trust deploying this model once more users have put in their OWN custom texts into this model to test it out pushing it out to the public. But at this moment in time, it does seem like the model that i've built here sufficiently addresses the issue of human and AI texts being indistinguishable amid the spread of AI generated misinformation on social media. 
+
+## Interpreting the coefficients that influenced the model's decisions
+
+
+```python
+# Get the feature names from TF-IDF and handcrafted features
+tfidf_feature_names = tfidf.get_feature_names_out()         # 5000 TF-IDF token names
+handcrafted_names = np.array(feature_cols)                   # 6 handcrafted feature names
+all_feature_names = np.concatenate([tfidf_feature_names, handcrafted_names])  # combine both
+
+# Extract logistic regression coefficients (positive = predicts AI, negative = predicts human)
+coefficients = model.coef_[0]
+
+# Get top 20 most positive (AI-predicting) and top 20 most negative (human-predicting) features
+top_ai_idx    = np.argsort(coefficients)[-20:][::-1]   # 20 highest coefficients
+top_human_idx = np.argsort(coefficients)[:20]          # 20 lowest coefficients
+
+# Combine into one set for plotting
+top_idx = np.concatenate([top_ai_idx, top_human_idx])
+top_names = all_feature_names[top_idx]
+top_coefs = coefficients[top_idx]
+top_colors = ["tomato" if c > 0 else "steelblue" for c in top_coefs]  # red = AI, blue = human
+
+# Sort by coefficient value for a cleaner horizontal bar chart
+sorted_order = np.argsort(top_coefs)
+top_names = top_names[sorted_order]
+top_coefs = top_coefs[sorted_order]
+top_colors = [top_colors[i] for i in sorted_order]
+
+fig, ax = plt.subplots(figsize=(10, 12))
+bars = ax.barh(top_names, top_coefs, color=top_colors)   
+ax.axvline(x=0, color="black", linewidth=0.8)           
+ax.set_xlabel("Logistic Regression Coefficient", fontsize=12)
+ax.set_title("Top 20 Features Predicting AI vs Human Text\n(Red = AI, Blue = Human)", 
+             fontsize=13, fontweight="bold")
+plt.tight_layout()
+plt.savefig("feature_importance.png", dpi=300, bbox_inches="tight")
+plt.show()
+logging.info("feature importance plot saved to feature_importance.png")
+```
+
+
+    
+![png](pipeline_files/pipeline_27_0.png)
+    
+
+
+- This plot shows the words that are learned by the model to be used to distinguish AI and human language, it is rather interesting to see how AI generated language has a lot of full words while human language usually has simpler filler words
+
+
+```python
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 3, figsize=(14, 5))
+
+features_to_plot = ["word_count", "unique_word_ratio", "avg_word_length"]
+titles = ["Word Count", "Unique Word Ratio", "Avg Word Length"]
+clips = [1000, None, 10]  # clip outliers per feature
+
+for ax, feat, title, clip in zip(axes, features_to_plot, titles, clips):
+    human_vals = df[df["label"] == 0][feat]
+    ai_vals    = df[df["label"] == 1][feat]
+
+    if clip:
+        human_vals = human_vals.clip(upper=clip)
+        ai_vals    = ai_vals.clip(upper=clip)
+
+    parts_human = ax.violinplot([human_vals], positions=[0], showmedians=True)
+    parts_ai    = ax.violinplot([ai_vals],    positions=[1], showmedians=True)
+
+    # Color human steelblue, AI tomato
+    for pc in parts_human["bodies"]:
+        pc.set_facecolor("steelblue")
+        pc.set_alpha(0.7)
+    for pc in parts_ai["bodies"]:
+        pc.set_facecolor("tomato")
+        pc.set_alpha(0.7)
+
+    ax.set_xticks([0, 1])
+    ax.set_xticklabels(["Human", "AI"], fontsize=11)
+    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_ylabel("Value", fontsize=10)
+
+plt.suptitle("Linguistic Feature Distributions: Human vs AI Text",
+             fontsize=13, fontweight="bold", y=1.02)
+plt.tight_layout()
+plt.savefig("feature_distributions.png", dpi=300, bbox_inches="tight")
+plt.show()
+logging.info("feature distribution plot saved to feature_distributions.png")
+```
+
+
+    
+![png](pipeline_files/pipeline_29_0.png)
+    
+
+
+- The differences between the statistical differences in human and AI generated language, AI seem to have a narrower range of word count, and wide range of unique words, and more outliers in terms of average word length. Whereas human writings are more stochastic on word count (the word count varies a lot), the unique words employed is also pretty fixed, and the average word length is pretty fixed too.
