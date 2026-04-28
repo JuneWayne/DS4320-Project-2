@@ -70,8 +70,6 @@ The dataset used in this project is derived from the RAID (Robust AI-Generated t
 
 ### Rationale for Critical Decisions
 
-### Rationale for Critical Decisions
-
 The decision to sample 2,000 documents per domain was driven by memory constraints on the local machine used to load the downloaded data. Loading a full 5 million row CSV continuously crashed the kernel, so chunked loading per sampled domain was the only viable approach. Although this may introduce uncertainty because the sample may not be fully representative of the full domain distribution, this still needs to be improved in future work by conducting bootstrap resampling techniques to ensure full randomization.
 
 The decision to derive labels from the model field rather than using an explicit label column was necessary because the RAID train set does not provide direct ground truth labels, so a one hot encoding was created for each type of text instead.
@@ -90,7 +88,9 @@ Bias could have been introduced at the data collection stage by having an unbala
 
 ### Bias Mitigation
 
-The class imbalance between human and AI generated text can be addressed during modeling by using class-weighted loss functions, resampling techniques within the existing data, or using the embedded feature of sklearn's train test split to ensure class balance through their own resampling techniques. The domain specific bias in human writing sources can be quantified by evaluating model performance in each domain, which allows identification of domains where the classifier underperforms and domains where it performs well. This way we could see which domains or writing styles still need more data collection in order to have the model successfully distinguish AI generated text from human text. To address the model obsolescence bias, the dataset must simply be enriched with a more abundant level of AI generated texts from current SOTA models like Claude Opus, GPT-5, or DeepSeek R-1, to allow the model to learn patterns from AI generated text that are from advanced reasoning equipped capability models.
+The class imbalance between human and AI generated text was directly addressed during modeling in two ways. First, a stratified split was used when dividing the human documents across train and test sets, ensuring that the 9/91 human to AI ratio was preserved consistently across all three splits rather than having one split end up with disproportionately fewer human samples. Second, a class weight of 20 for the human class was applied in the Logistic Regression, which was selected through a grid search over multiple weight and regularization combinations evaluated on the validation set using PR-AUC. This tells the model to penalize misclassifying a human sample 20 times more heavily than misclassifying an AI sample, pushing it to take the minority class more seriously during training.
+
+The domain specific bias in human writing sources can be quantified by evaluating model performance in each domain, which allows identification of domains where the classifier underperforms and domains where it performs well. This way we could see which domains or writing styles still need more data collection in order to have the model successfully distinguish AI generated text from human text. To address the model obsolescence bias, the dataset must simply be enriched with a more abundant level of AI generated texts from current SOTA models like Claude Opus, GPT-5, or DeepSeek R-1, to allow the model to learn patterns from AI generated text that are from advanced reasoning equipped capability models.
 
 ## Metadata
 
