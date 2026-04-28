@@ -1,7 +1,8 @@
-datasets
-dotenv
+python-dotenv
 pandas
 scikit-learn
 matplotlib
+scipy
+numpy
 tqdm
 pymongo
