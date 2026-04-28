@@ -535,6 +535,9 @@ He provided a lot of guidance for me to navigate the space of researching on mul
 Let me known if there's anymore info you would like me to provide!
 """,
     """The rapid advancement of artificial intelligence technologies has fundamentally transformed the landscape of modern computing and data processing. Machine learning algorithms, particularly deep neural networks, have demonstrated remarkable capabilities in pattern recognition, natural language understanding, and predictive analytics across diverse application domains. These sophisticated systems leverage vast quantities of training data to identify complex statistical relationships that would be virtually impossible for human analysts to detect manually. Furthermore, the integration of transformer architectures has enabled unprecedented performance improvements in sequential data processing tasks, facilitating breakthroughs in automated translation, text summarization, and conversational AI systems. As these technologies continue to mature, researchers are increasingly focused on addressing critical challenges related to model interpretability, computational efficiency, and ethical deployment considerations.""",
+    """
+    They're actively seeking UVA students to help engineer, acquire, and launch the next generation of space capabilities--join them for a series of events across campus on April 28, 2026 to explore some incredible internship and job opportunities. 1st through 4th years and graduate students are all welcome!
+    """
 ]
 
 # Transform the text inputs using the fitted TF-IDF vectorizer
@@ -573,6 +576,71 @@ for i, text in enumerate(test_inputs):
     Text: The rapid advancement of artificial intelligence technologies has fundamentally ...
     Prediction: AI | P(human): 0.1675, P(AI): 0.8325
     
+    Text: 
+        They're actively seeking UVA students to help engineer, acquire, and launch...
+    Prediction: AI | P(human): 0.1345, P(AI): 0.8655
+    
+
+
+
+```python
+# Interactive prediction loop for custom text input
+print("Type any text and press Enter to get a prediction.")
+print("Type 'quit' to stop.\n")
+
+while True:
+    user_text = input("Enter text: ").strip()
+
+    if user_text.lower() in ["quit", "exit", "q"]:
+        print("Stopped interactive predictions.")
+        break
+
+    if not user_text:
+        print("Please enter some text.\n")
+        continue
+
+    # Transform input text with the fitted TF-IDF vectorizer
+    X_user_tfidf = tfidf.transform([user_text])
+
+    # Build handcrafted features for the input text
+    words = user_text.split()
+    sentence_count = max(len([s for s in user_text.split('.') if s.strip()]), 1)
+    word_count = len(words)
+
+    user_hand = sp.csr_matrix([[
+        word_count,
+        word_count / sentence_count,
+        len(set(words)) / max(word_count, 1),
+        sum(len(w) for w in words) / max(word_count, 1),
+        sum(1 for c in user_text if c in '.,;:!?') / max(len(user_text), 1),
+        0
+    ]])
+
+    # Combine all features and predict
+    X_user = sp.hstack([X_user_tfidf, user_hand])
+    pred = model.predict(X_user)[0]
+    prob = model.predict_proba(X_user)[0]
+
+    label = "AI" if pred == 1 else "Human"
+    print(f"Prediction: {label} | P(human): {prob[0]:.4f}, P(AI): {prob[1]:.4f}\n")
+```
+
+    Type any text and press Enter to get a prediction.
+    Type 'quit' to stop.
+    
+    Prediction: AI | P(human): 0.4141, P(AI): 0.5859
+    
+    Prediction: Human | P(human): 0.5345, P(AI): 0.4655
+    
+    Prediction: AI | P(human): 0.3837, P(AI): 0.6163
+    
+    Prediction: AI | P(human): 0.1345, P(AI): 0.8655
+    
+    Please enter some text.
+    
+    Please enter some text.
+    
+    Stopped interactive predictions.
 
 
 ## Does this Solves the problem?
@@ -623,7 +691,7 @@ logging.info("feature importance plot saved to feature_importance.png")
 
 
     
-![png](pipeline_files/pipeline_27_0.png)
+![png](pipeline_files/pipeline_28_0.png)
     
 
 
@@ -673,7 +741,7 @@ logging.info("feature distribution plot saved to feature_distributions.png")
 
 
     
-![png](pipeline_files/pipeline_29_0.png)
+![png](pipeline_files/pipeline_30_0.png)
     
 
 
