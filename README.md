@@ -2,7 +2,7 @@
 
 **Name:** Ethan Cao  
 **NetID:** wkt7ne  
-**DOI:** 
+**DOI:** [![DOI](https://zenodo.org/badge/1215332512.svg)](https://doi.org/10.5281/zenodo.19866141)
 **License:** MIT — [LICENSE](./LICENSE)  
 **Press Release:** [press_release.md](./press_release.md)  
 **Pipeline:** [pipeline.ipynb](./pipeline.ipynb) | [pipeline.md](./pipeline.md)
@@ -129,7 +129,7 @@ The `texts` collection is the primary collection of the database. It contains th
 | --------------------- | -------------- | --------------------------------------------------------- | ---------------------------------------- |
 | `_id`                 | ObjectId       | MongoDB auto-generated document identifier                | `ObjectId('69dc605615e0ddb5b4ffef25')`   |
 | `raid_id`             | string         | UUID uniquely identifying the source generation in RAID   | `"e5e058ce-be2b-459d-af36-32532aaba5ff"` |
-| `model_id`            | string         | Foreign key referencing the model that generated the text | `"chatgpt"`                              |
+| `model_id`            | string         | Foreign key referencing the model that generated the text | `"mistral"`                              |
 | `domain_id`           | string         | Foreign key referencing the domain/genre of the text      | `"abstracts"`                            |
 | `text`                | string         | Full text of the generation or human-written source       | `"The recent advancements in..."`        |
 | `label`               | integer        | Authorship label: 0 = human-written, 1 = AI-generated     | `1`                                      |
