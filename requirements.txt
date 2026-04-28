@@ -1,3 +1,7 @@
 datasets
 dotenv
 pandas
+scikit-learn
+matplotlib
+tqdm
+pymongo

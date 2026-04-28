@@ -4,9 +4,9 @@
 **NetID:** wkt7ne  
 **DOI:**  [![DOI](https://zenodo.org/badge/1215332512.svg)](https://doi.org/10.5281/zenodo.19866141)
 
-**License:** MIT — [LICENSE](./LICENSE)  
+**License:** MIT — [LICENCE](./LICENCE)  
 **Press Release:** [press_release.md](./press_release.md)  
-**Pipeline:** [pipeline.ipynb](./pipeline.ipynb) | [pipeline.md](./pipeline.md)
+**Pipeline:** [pipeline.ipynb](code/pipeline.ipynb) | [pipeline.md](code/pipeline.md)
 
 ## Executive Summary
 
