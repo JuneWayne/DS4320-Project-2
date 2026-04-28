@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This repository contains the full pipeline for a binary text classification project that tries to tell apart human-written text from AI-generated text. The dataset comes from the RAID benchmark (Dugan et al., ACL 2024), sampled down to 16,000 documents across 8 content domains and 6 AI model sources, and stored in MongoDB Atlas. The pipeline combines TF-IDF text features with handcrafted linguistic statistics to train a Logistic Regression classifier, which is then tested on a held-out model family that was never seen during training. The repository includes the data loading script, the analysis pipeline notebook, metadata documentation, and a press release.
+This repository contains the full pipeline for a binary text classification project that tries to tell apart human-written text from AI-generated text. The dataset comes from the RAID benchmark (Dugan et al., ACL 2024), sampled down to 16,000 documents across 8 content domains and 6 AI model + human generated text sources, and stored in MongoDB Atlas. The pipeline combines TF-IDF text features with handcrafted linguistic statistics to train a Logistic Regression classifier, which is then tested on a held-out model family that was never seen during training. The repository includes the data loading script, the analysis pipeline notebook, metadata documentation, and a press release.
 
 ## Problem Definition
 
@@ -147,7 +147,7 @@ The `texts` collection is the primary collection of the database. It contains th
 | Field          | Data Type | Description                                      | Example         |
 | -------------- | --------- | ------------------------------------------------ | --------------- |
 | `_id`          | ObjectId  | MongoDB auto-generated document identifier       | `ObjectId(...)` |
-| `model_id`     | string    | Unique model identifier                          | `"chatgpt"`     |
+| `model_id`     | string    | Unique model identifier                          | `"mistral"`     |
 | `is_human`     | boolean   | Whether this entry represents human-written text | `false`         |
 | `organization` | string    | Organization that developed the model            | `"OpenAI"`      |
 

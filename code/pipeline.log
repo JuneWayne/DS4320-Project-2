@@ -92,3 +92,6 @@
 2026-04-28 14:56:22,860 INFO train loss: 0.1995, val loss: 0.2343
 2026-04-28 14:56:25,201 INFO PR-AUC: 0.9959
 2026-04-28 14:56:29,634 INFO evaluation plots saved to evaluation.png
+2026-04-28 16:21:48,191 INFO feature importance plot saved to feature_importance.png
+2026-04-28 16:24:06,298 INFO feature distribution plot saved to feature_distributions.png
+2026-04-28 16:25:06,409 INFO feature distribution plot saved to feature_distributions.png
